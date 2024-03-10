@@ -1,6 +1,6 @@
 # flutter_reccuring_reminder
 
-A new Flutter project.
+Reccuring Reminder App
 
 ## Getting Started
 
