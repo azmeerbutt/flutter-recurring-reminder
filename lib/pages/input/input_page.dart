@@ -5,7 +5,7 @@ import 'package:flutter_reccuring_reminder/common/values/constant.dart';
 import 'package:flutter_reccuring_reminder/pages/input/bloc/input_bloc.dart';
 import 'package:flutter_reccuring_reminder/pages/input/bloc/input_event.dart';
 import 'package:flutter_reccuring_reminder/pages/input/input_controller.dart';
-import 'package:flutter_reccuring_reminder/pages/input_widgets.dart';
+import 'package:flutter_reccuring_reminder/pages/input/input_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'bloc/input_state.dart';
