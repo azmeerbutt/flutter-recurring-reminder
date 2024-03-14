@@ -44,18 +44,6 @@ class _HomeState extends State<Home> {
     setState(() => isLoading = false);
   }
 
-  // void _onTaskDone(bool? newValue) {
-  //   context.read<HomeBloc>().add(DoneTaskEvent(done: newValue!));
-
-  //   if (newValue) {
-  //     print(newValue);
-  //     // TODO: Here goes your functionality that remembers the user.
-  //   } else {
-  //     print(newValue);
-  //     // TODO: Forget the user
-  //   }
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -64,7 +52,6 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    // TasksDatabase.instance.close();
     super.dispose();
   }
 
@@ -93,9 +80,11 @@ class _HomeState extends State<Home> {
         return isLoading
             ? const Center(child: CircularProgressIndicator())
             : tasks!.isEmpty
-                ? const Text(
-                    'No Tasks',
-                    style: TextStyle(color: Colors.white, fontSize: 24),
+                ? const Center(
+                    child: Text(
+                      'No Tasks',
+                      style: TextStyle(color: Colors.grey, fontSize: 24),
+                    ),
                   )
                 : ListView.builder(
                     shrinkWrap: true,
