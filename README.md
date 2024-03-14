@@ -1,16 +1,3 @@
 # flutter_reccuring_reminder
 
-Reccuring Reminder App
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Our reminder app provides seamless scheduling for both one-time and recurring reminders, enhancing users' organizational capabilities. Users can effortlessly set reminders for specific dates and times, along with customizable recurring reminders on an hourly, daily, or weekly basis. Additionally, leveraging local notification capabilities, users receive timely reminders even when offline, ensuring they stay informed and organized without the need for an internet connection.
