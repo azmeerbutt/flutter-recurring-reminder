@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_reccuring_reminder/common/values/colors.dart';
 import 'package:flutter_reccuring_reminder/common/values/constant.dart';
+import 'package:flutter_reccuring_reminder/pages/home/home_page.dart';
 import 'package:flutter_reccuring_reminder/pages/input/bloc/input_bloc.dart';
 import 'package:flutter_reccuring_reminder/pages/input/bloc/input_event.dart';
 import 'package:flutter_reccuring_reminder/pages/input/input_controller.dart';
@@ -50,7 +51,7 @@ class _InputPageState extends State<InputPage> {
       body: BlocBuilder<InputBloc, InputState>(builder: (context, state) {
         return SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30.0.w, vertical: 20.0.h),
+            padding: EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 20.0.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -164,9 +165,13 @@ class _InputPageState extends State<InputPage> {
                                       SizedBox(
                                         width: 5.0.w,
                                       ),
-                                      buildAlarmText(
-                                          text:
-                                              '${state.dateTime!.hour.toString()}:${state.dateTime!.minute.toString()}'),
+                                      state.dateTime!.minute < 10
+                                          ? buildAlarmText(
+                                              text:
+                                                  '${state.dateTime!.hour.toString()}:0${state.dateTime!.minute.toString()}')
+                                          : buildAlarmText(
+                                              text:
+                                                  '${state.dateTime!.hour.toString()}:${state.dateTime!.minute.toString()}'),
                                     ],
                                   )
                                 ],
@@ -181,17 +186,17 @@ class _InputPageState extends State<InputPage> {
           ),
         );
       }),
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(right: 14.0.w),
-        child: FloatingActionButton(
-          onPressed: () {
-            //  inputController.showNotification();
-          },
-          tooltip: 'Done',
-          child: const Icon(
-            Icons.done,
-            color: AppColors.mainTheme,
-          ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.mainTheme,
+        onPressed: () {
+          inputController.generateTask();
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => const Home()));
+        },
+        tooltip: 'Done',
+        child: const Icon(
+          Icons.done,
+          color: Colors.white,
         ),
       ),
     );

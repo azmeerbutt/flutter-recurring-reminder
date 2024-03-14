@@ -1,9 +1,17 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_reccuring_reminder/common/database/task_database.dart';
+import 'package:flutter_reccuring_reminder/common/entities/task.dart';
+import 'package:flutter_reccuring_reminder/common/values/constant.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+
+import 'bloc/input_bloc.dart';
 
 class InputController {
   final BuildContext context;
@@ -77,8 +85,7 @@ class InputController {
     tz.setLocalLocation(tz.getLocation(currentTimeZone));
   }
 
-  Future showNotification() async {
-    await flutterLocalNotificationsPlugin.cancel(0);
+  NotificationDetails _androidNotificationDetails() {
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails('your channel id', 'your channel name',
             channelDescription: 'your channel description',
@@ -87,28 +94,68 @@ class InputController {
             ticker: 'ticker');
     const NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
-    // await flutterLocalNotificationsPlugin.periodicallyShow(
-    //   0,
-    //   'repeating title',
-    //   'repeating body',
-    //   RepeatInterval.daily,
-    //   notificationDetails,
-    // );
+    return notificationDetails;
+  }
+
+  Future generateZonedSchedule(
+      int id, String title, String body, int time) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
-        1,
-        'scheduled title',
-        'scheduled body',
-        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
-        notificationDetails,
+        id,
+        title,
+        body,
+        tz.TZDateTime.now(tz.local).add(Duration(seconds: time)),
+        _androidNotificationDetails(),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
   }
 
-  // void generateTask() {
-  //   var state = context.read<InputBloc>().state;
-  //   String? task = state.task;
-  //   DateTime? dateTime = state.dateTime;
-  //   String? list = state.list;
-  // }
+  Future generateRecurrciveTask(
+      int id, String title, String body, RepeatInterval repeatInterval) async {
+    await flutterLocalNotificationsPlugin.periodicallyShow(
+      id,
+      title,
+      body,
+      repeatInterval,
+      _androidNotificationDetails(),
+    );
+  }
+
+  Future<void> cancelNotification(int id) async {
+    await flutterLocalNotificationsPlugin.cancel(0);
+  }
+
+  void generateTask() {
+    var state = context.read<InputBloc>().state;
+    String? body = state.task;
+    DateTime? dateTime = state.dateTime;
+    String? list = state.list;
+    String? duration = state.duration;
+    int id = Random().nextInt(10000);
+
+    int pick = (dateTime!.millisecondsSinceEpoch ~/ 1000);
+    int now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    int time = pick - now;
+    if (duration == AppConstant.INITIAL_RECURRENCE) {
+      generateZonedSchedule(id, list!, body!, time);
+    } else if (duration == AppConstant.RECURRENCE[1]) {
+      generateRecurrciveTask(id, list!, body!, RepeatInterval.hourly);
+    } else if (duration == AppConstant.RECURRENCE[2]) {
+      generateRecurrciveTask(id, list!, body!, RepeatInterval.daily);
+    } else if (duration == AppConstant.RECURRENCE[3]) {
+      generateRecurrciveTask(id, list!, body!, RepeatInterval.weekly);
+    }
+    final task = Task(
+      id: id,
+      title: list!,
+      body: body!,
+      recurrence: duration!,
+      dateTime: pick,
+    );
+
+    print(
+        'id= ${task.id} , title=${task.title} , body=${task.body} , repeat= ${task.recurrence} , date=${task.dateTime}');
+    TasksDatabase.instance.create(task);
+    print('data save');
+  }
 }

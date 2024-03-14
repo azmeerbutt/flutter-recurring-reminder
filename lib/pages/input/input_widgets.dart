@@ -137,6 +137,7 @@ Widget buildDurationText(String? duration) {
 Widget buildAlarmText({String? text}) {
   return Text(
     text ?? '',
+    overflow: TextOverflow.fade,
     style: TextStyle(
       color: Colors.green,
       fontSize: 18.w,
